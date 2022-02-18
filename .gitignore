@@ -1,0 +1,6 @@
+*.c
+*.out
+c_files/*.c
+c_files/*.out
+fname_pkl
+results.csv

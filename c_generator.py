@@ -3,6 +3,7 @@
 # this python script will generate C files for memory testing
 
 import os
+import pickle
 
 FILE_LOCATION_PREFIX = "c_files/"
 
@@ -24,9 +25,11 @@ k_val = "54"
 
 loop_starts = ["20", "8", "6", "4"]
 
-loop_ends = ["0", "-1", "-5", "-6", "-20", "-2100000"]
+loop_ends = ["0", "-1", "-5", "-6", "-20"]#, "-2100000"]
 
 if __name__ == "__main__":
+
+    f_name_mem = list()
 
     for it in i_types:
         for arrt in arr_types:
@@ -35,6 +38,8 @@ if __name__ == "__main__":
                     for le in loop_ends:
 
                         filename = "ts-i"+it+"-a"+arrt+"-k"+kt+"-"+ls+"-"+le+".c"
+
+                        f_name_mem.append(FILE_LOCATION_PREFIX + filename)
 
                         f = open(FILE_LOCATION_PREFIX + filename, 'w')
                         if f is not None:
@@ -78,5 +83,11 @@ if __name__ == "__main__":
                             f.write("printf(\"done\\n\");\n")
                             f.write("}\n")
 
+                            f.close()
+
                         else:
                             print("Error opening file")
+
+    pkl_file = open("fname_pkl", "wb")
+    pickle.dump(f_name_mem, pkl_file)
+    pkl_file.close()
