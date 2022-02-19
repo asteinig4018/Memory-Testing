@@ -61,11 +61,17 @@ if __name__ == "__main__":
 
                             #ensure correct printing types
                             if it == TYPE_DOUBLE:
-                                f.write("printf(\"l- i: %lf arr[i]: %d, ")
+                                f.write("printf(\"l- i: %lf")
                             elif it == TYPE_INT64:
-                                f.write("printf(\"l- i: %ld arr[i]: %d, ")
+                                f.write("printf(\"l- i: %ld")
                             else:
-                                f.write("printf(\"l- i: %d arr[i]: %d, ")
+                                f.write("printf(\"l- i: %d")
+
+                            if arrt == TYPE_INT:
+                                f.write(" arr[i]: %d, ")
+                            elif arrt == TYPE_INT64:
+                                f.write(" arr[i]: %ld, ")
+
 
                             if kt == TYPE_DOUBLE:
                                 f.write("k: %lf\\n\"")
