@@ -49,6 +49,28 @@ The output csv can be easily sorted, filtered, and anlyzed as an .xlsx in excel.
 
 I tested with `i` as an `int`, `int64_t`, and `double`; `arr` as an `int` and `int64_t`; and `k` as an `int`, `int64_t`, and `double`. 
 
+Visual reference for comparison with tables below:
+|`i` type|`arr` type|`k` type|
+|--|--|--|
+|`int`|`int`|`int`|
+|`int`|`int`|`int64_t`|
+|`int`|`int`|`double`|
+|`int`|`int64_t`|`int`|
+|`int`|`int64_t`|`int64_t`|
+|`int`|`int64_t`|`double`|
+|`int64_t`|`int`|`int`|
+|`int64_t`|`int`|`int64_t`|
+|`int64_t`|`int`|`double`|
+|`int64_t`|`int64_t`|`int`|
+|`int64_t`|`int64_t`|`int64_t`|
+|`int64_t`|`int64_t`|`double`|
+|`double`|`int`|`int`|
+|`double`|`int`|`int64_t`|
+|`double`|`int`|`double`|
+|`double`|`int64_t`|`int`|
+|`double`|`int64_t`|`int64_t`|
+|`double`|`int64_t`|`double`|
+
 I started the loop at `4`, `6`, `8`, and `20`. I ended the loop at `0`, `-1`, `-5`, `-6`, and `-20`. 
 
 Expected out come: I expcted segmentation faults or `i` to be overwritten, causing an infinite loop. 
