@@ -61,12 +61,15 @@ As it turned out, indexing any part of the array greater than its declared lengt
 An array end of `-20` also had the same effect as an array end of `-6`, so I just looked at one of them. 
 
 #### Memory-Significant Patterns
-* Whenever the array index went to `-5` or further negative, the program would inifite loop, unless i was an `int64_t` and arr was an `int` type. In that case, the program would segmentation fault. 
-* When the array index went to `-1`, the program would usually finish normally, except in the cases below. 
+* Whenever the array index went to `-5` or further negative, the program would inifite loop, unless `i` was an `int64_t` and `arr` was an `int` type. In that case, the program would segmentation fault. 
+    * It's rather interesting that this only happened when i was an `int64_t` and not also a `double` as a `double` is also a 64 bit wide data type. 
+* When the array index went to `-1`, the program would usually finish normally, except in the cases below. Timeout refers to an infinite loop.
 
-|i type|arr type|k type|timeout|segfault|
+|`i` type|`arr` type|`k` type|timeout|segfault|
 |--|--|--|--|--|
 |`int`|`int64_t`|`int`|TRUE|FALSE|
 |`double`|`int`|`int`|TRUE|FALSE|
 |`double`|`int64_t`|`int`|TRUE|FALSE|
 |`int64_t`|`int`|`int`|FALSE|TRUE|
+
+We see the same `i` `int64_t` and `arr` `int` combination that caused the segfault for `-5` and below, but this time it only happens when `k` is an `int`. 
