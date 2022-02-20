@@ -28,6 +28,7 @@ This is probably why people like Rust.
 
 ```
 pip install pexpect
+mkdir c_files
 ```
 
 First, generate the C files. Create a directory c_files (in the future, you may be able to change this with a passed argument). Then run
@@ -77,6 +78,8 @@ Expected out come: I expcted segmentation faults or `i` to be overwritten, causi
 
 ### Surface Pro (7th Gen Intel i7, 64 bit system)
 
+[Excel Sheet](surface-i7_results.xlsx)
+
 #### Initial Observations
 As it turned out, indexing any part of the array greater than its declared length would give a `*** stack smashing detected ***` error, crashing the test. 
 
@@ -97,6 +100,8 @@ An array end of `-20` also had the same effect as an array end of `-6`, so I jus
 We see the same `i` `int64_t` and `arr` `int` combination that caused the segfault for `-5` and below, but this time it only happens when `k` is an `int`. 
 
 ### Raspberry Pi B (Broadcom Cortex-A53 ARMv8, 64 bit system)
+
+[Excel Sheet](rasppi-3b_results.xlsx)
 
 #### Initial Observations
 Given the Raspberry Pi is also a 64-bit system, far fewer tests failed. The loop beginning seemed to be the stem of most of the differences. The loop end had no effect, which was pretty suprising considering it was one of the most differentiating factors on the Surface. 
