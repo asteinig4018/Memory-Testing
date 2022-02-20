@@ -73,3 +73,39 @@ An array end of `-20` also had the same effect as an array end of `-6`, so I jus
 |`int64_t`|`int`|`int`|FALSE|TRUE|
 
 We see the same `i` `int64_t` and `arr` `int` combination that caused the segfault for `-5` and below, but this time it only happens when `k` is an `int`. 
+
+### Raspberry Pi B (Broadcom Cortex-A53 ARMv8, 64 bit system)
+
+#### Initial Observations
+Given the Raspberry Pi is also a 64-bit system, far fewer tests failed. The loop beginning seemed to be the stem of most of the differences. The loop end had no effect, which was pretty suprising considering it was one of the most differentiating factors on the Surface. 
+
+#### Memory-Significant Patterns
+The following combinations led to an infinite loop (timeout) for loops starting at `8` and `20`, regardless of loop end. These were the only inifinte loops. 
+
+|`i` type|`arr` type|`k` type|
+|--|--|--|
+|`int64_t`|`int`|`int`|
+|`int64_t`|`int`|`int64_t`|
+|`int64_t`|`int`|`double`|
+
+Essentially, when `i` was an `int64_t` and `arr` was `int`, loops starting at `8` and `20` looped infinitely, regardless of loop end point. 
+
+The segmentation faults that happened displayed a much more inconsistent pattern. 
+
+Loops starting at `20` failed:
+|`i` type|`arr` type|
+|--|--|--|
+|`double`|`int64_t`|
+|`int64_t`|`int64_t`|
+|`int`|`int64_t`|
+|`int`|`int`|
+|`double`|`int`|
+
+Loops starting at `8` failed:
+|`i` type|`arr` type|notes|
+|--|--|--|--|
+|`double`|`int64_t`||
+|`int64_t`|`int64_t`||
+|`int`|`int64_t`|also on `6` when `k` is `int`|
+|`int`|`int`|only when `k` is `int`|
+
