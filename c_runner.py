@@ -40,7 +40,7 @@ if __name__ =='__main__':
 
         #compile the code
 
-        process = subprocess.run(["gcc", "-lm", args.optimization, "-o", "test.out", fname])
+        process = subprocess.run(["gcc", args.optimization, "-o", "test.out", fname])
 
         if process.returncode != 0:
             print("compile failed: "+fname)
