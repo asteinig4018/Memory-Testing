@@ -7,6 +7,7 @@ import pickle
 import time
 import subprocess
 import argparse
+import pexpect
 
 if __name__ =='__main__':
 
@@ -33,7 +34,7 @@ if __name__ =='__main__':
 
     outfile = open(args.output, "w")
 
-    outfile.write("filename,type i,type arr,type k,loop start,loop end,returncode,timeout,other fail,stdout,stderr\n")
+    outfile.write("filename,type i,type arr,type k,loop start,loop end,returncode,timeout,segfault,other fail,stdout/stderr\n")
 
     for fname in fnames:
 
@@ -50,12 +51,13 @@ if __name__ =='__main__':
         perror_stdout = ""
         perror_stderr = ""
         other_fail = False
+        ret_status = 0
 
         try:
             #using python 3.6 for portability
             #attempt1
-            process = subprocess.run(["./test.out"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
-            universal_newlines=True, check=True, timeout=5)
+            # process = subprocess.run(["./test.out"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
+            # universal_newlines=True, check=True, timeout=5)
             #attempt2
             # process = subprocess.Popen(["./test.out"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
             #     shell=True, universal_newlines=True)
@@ -69,22 +71,38 @@ if __name__ =='__main__':
 
             # perror=True
             #attempt3
-        except subprocess.TimeoutExpired:
-            #timed out
-            tout= True
+            child = pexpect.spawn("./test.out", timeout=10)
+            child.expect(pexpect.EOF)
+            out = child.before
+            child.close()
+
+            if child.exitstatus is None:
+                ret_status = -1 * child.signalstatus
+                perror = True
+            else:
+                ret_status = child.exitstatus
+        
+        except pexpect.TIMEOUT:
+            tout=True
             print(fname+" timed out")
 
-        except subprocess.CalledProcessError as e:
-            print(fname+" process error")
-            perror_stdout = e.stdout
-            perror_stderr = e.stderr
-            perror = True
+        # except subprocess.TimeoutExpired:
+        #     #timed out
+        #     tout= True
+        #     print(fname+" timed out")
+
+        # except subprocess.CalledProcessError as e:
+        #     print(fname+" process error")
+        #     perror_stdout = e.stdout
+        #     perror_stderr = e.stderr
+        #     perror = True
 
         except Exception as e: 
             print("other failure")
             print(e)
             other_fail = True
 
+        #Parse current filename
         prog_options = fname.split("-")
         itype = prog_options[1][1:]
         atype = prog_options[2][1:]
@@ -95,22 +113,29 @@ if __name__ =='__main__':
         if prog_options[5] == '':
             lend = "-"+prog_options[6][:-2]
         else:
-            lend = prog_options[5]
+            lend = prog_options[5][:-2]
 
 
-        outfile.write(fname+","+itype+","+atype+","+ktype+","+lstart+","+lend+","+str(process.returncode)+","+str(tout)+","+str(other_fail)+",")
+        #outfile.write(fname+","+itype+","+atype+","+ktype+","+lstart+","+lend+","+str(process.returncode)+","+str(tout)+","+str(other_fail)+",")
+        outfile.write(fname+","+itype+","+atype+","+ktype+","+lstart+","+lend+","+str(ret_status)+","+str(tout)+","+str(perror)+","+str(other_fail)+",")
 
         # write stdout and stderr if they exist
-        if process.stdout is not None:
-            outfile.write(str(process.stdout).replace("\n"," ")+",")
-        if perror:
-            outfile.write(str(perror_stdout).replace("\n", " ")+",")
+        if out is not None:
+            outfile.write(str(out).replace("\n", " ").replace(","," ")+"\n")
         else:
-            outfile.write(",")
-        if process.stderr is not None:
-            outfile.write(str(process.stderr).replace("\n"," ") + "\n") 
-        if perror:
-            outfile.write(str(perror_stderr).replace("\n", " ") + "\n")
-        else:
-            outfile.write(",\n")
+            outfile.write("\n")
+
+
+        # if process.stdout is not None:
+        #     outfile.write(str(process.stdout).replace("\n"," ")+",")
+        # if perror:
+        #     outfile.write(str(perror_stdout).replace("\n", " ")+",")
+        # else:
+        #     outfile.write(",")
+        # if process.stderr is not None:
+        #     outfile.write(str(process.stderr).replace("\n"," ") + "\n") 
+        # if perror:
+        #     outfile.write(str(perror_stderr).replace("\n", " ") + "\n")
+        # else:
+        #     outfile.write(",\n")
 
