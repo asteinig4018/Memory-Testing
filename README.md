@@ -60,7 +60,7 @@ As it turned out, indexing any part of the array greater than its declared lengt
 
 An array end of `-20` also had the same effect as an array end of `-6`, so I just looked at one of them. 
 
-#### Memory-Significant Patterns
+#### Patterns
 * Whenever the array index went to `-5` or further negative, the program would inifite loop, unless `i` was an `int64_t` and `arr` was an `int` type. In that case, the program would segmentation fault. 
     * It's rather interesting that this only happened when i was an `int64_t` and not also a `double` as a `double` is also a 64 bit wide data type. 
 * When the array index went to `-1`, the program would usually finish normally, except in the cases below. Timeout refers to an infinite loop.
@@ -79,7 +79,7 @@ We see the same `i` `int64_t` and `arr` `int` combination that caused the segfau
 #### Initial Observations
 Given the Raspberry Pi is also a 64-bit system, far fewer tests failed. The loop beginning seemed to be the stem of most of the differences. The loop end had no effect, which was pretty suprising considering it was one of the most differentiating factors on the Surface. 
 
-#### Memory-Significant Patterns
+#### Patterns
 The following combinations led to an infinite loop (timeout) for loops starting at `8` and `20`, regardless of loop end. These were the only inifinte loops. 
 
 |`i` type|`arr` type|`k` type|
@@ -94,7 +94,7 @@ The segmentation faults that happened displayed a much more inconsistent pattern
 
 Loops starting at `20` failed:
 |`i` type|`arr` type|
-|--|--|--|
+|--|--|
 |`double`|`int64_t`|
 |`int64_t`|`int64_t`|
 |`int`|`int64_t`|
@@ -103,7 +103,7 @@ Loops starting at `20` failed:
 
 Loops starting at `8` failed:
 |`i` type|`arr` type|notes|
-|--|--|--|--|
+|--|--|--|
 |`double`|`int64_t`||
 |`int64_t`|`int64_t`||
 |`int`|`int64_t`|also on `6` when `k` is `int`|
