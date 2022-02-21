@@ -138,7 +138,7 @@ Loops starting at `8` threw error:
 
 Upon closer inspection, this is not the full picture. As opposed to other tested systems (M1 and Surface), the stdout differed greatly between programs. 
 
-Programs starting the loop at `4` had no problems, but starting at `6` and above caused problems. Programs starting above `6` (`8` and `20`) (if they didn't immediately write a random value `arr[i]` and set `i` to `0`) to would iterate down normally until they reached `6` or `5` and then skip to `0` or `1`. Starting at `6` would almost always result in an overwrite of `k` to `-1`, `0`, or a garbage value (except when `i` was a `double`, `arr` was an `int64_t`, and `k` was a `double`). In most cases either `i` or `arr[i]` or both would also take on some garbage value or `54`. 
+Programs starting the loop at `4` had no problems, but starting at `6` and above caused problems. Programs starting above `6` (`8` and `20`) (if they didn't immediately write a random value to `arr[i]` and set `i` to `0`) would iterate down normally until they reached `6` or `5` and then skip to `0` or `1`. Starting at `6` would almost always result in an overwrite of `k` to `-1`, `0`, or a garbage value (except when `i` was a `double`, `arr` was an `int64_t`, and `k` was a `double`). In most cases either `i` or `arr[i]` or both would also take on some garbage value or `54`. 
 
 These results make me question how Raspberry Pi's lay out their memory. It seems to be in an opposite order of the other systems tested.  
 
@@ -158,5 +158,5 @@ However, if the arry index reached `-6` or `-20`, the program would infinite loo
 
 However, these infinite loops did not occur when `i` was an `int64_t` and `arr` was an `int`. In this case, every program threw and error consistent with a segmentation fault other than the case below. 
 
-This leaves the case where the array starts at `4` and ends at either `0`, `-1`, or `-5` as the only times the program ends normally. 
+This leaves the case where the array starts at `4` and ends at either `0`, `-1`, or `-5`(`5` only when `arr` was not an `int64_t`) as the only times the program ends normally. 
 
